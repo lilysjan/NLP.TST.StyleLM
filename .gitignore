@@ -1,5 +1,8 @@
 .idea
 
 data/raw
+!data/raw/readme.md
 data/train
+!data/train/readme.md
 data/val
+!data/val/readme.md

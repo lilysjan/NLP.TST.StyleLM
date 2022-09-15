@@ -1,0 +1,10 @@
+id: test
+
+batch_size: 128
+epochs: 25
+
+lr: 0.001
+weight_decay: 0.01
+momentum: 0.9
+
+optim: sgd

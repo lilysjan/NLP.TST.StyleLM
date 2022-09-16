@@ -4,3 +4,4 @@ db/raw
 db/train
 db/val
 
+*.pyc

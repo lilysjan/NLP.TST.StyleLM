@@ -8,6 +8,32 @@ StyleLM 을 이용한 시나리오 작성
 <br> 
 @TEAM 캐릭캐릭체인G
 
+# Overview
+
+## Motivation
+![overview-1](overview-1.PNG)
+
+흔히 영화관에서 배우들은 대본을 보고 대사를 진행하지만, 대본을 작성할 때에 주로 문어체로 전달이 되기 때문에 억양이나 작 중 성격과 같은 비언어, 반언어적 요소는 배우에 의존하게 된다. 이는 대본을 "작성"하는 과정에서 구어체로 작성하는 것이 전체 시나리오를 완성하고 준비하는 과정에서 우선순위에 밀리기도 하며 필요한 시간이 소모적이란 점이다. 
+
+## Modelling
+![overview-2](overview-2.PNG)
+
+다만 영화의 장르적 특성으로 인해 등장인물들의 구사하는 표현들이나 뉘앙스에도 반복되는 패턴이 있게 된다. 이 반복되는 패턴에 주목하여, 입력문장의 내용은 보존하지만, 장르의 스타일을 반영된 대사로 바꿔주는 Text Style Transfer(TST)를 수행하는 모델을 구현해봤습니다.
+
+## Implementation-Data
+![overview-3](overview-3.PNG)
+
+TST를 수행하는 모델로 Style LM([참고문헌](https://ojs.aaai.org/index.php/AAAI/article/view/6433))을 구현하기 위해  HuggingFace에서 제공하는 pre-trained KoBERT 모델과 Encoder-Decoder 모델을 사용했습니다. 이 때 사용한 configuration"klue/bert-base"([Ref.](https://huggingface.co/klue/bert-base))을 사용했습니다.
+
+fine-tuning을 위해 직접 크롤링한 한국어 대본 데이터를 사용했습니다. 크롤링의 경우장르구분을 위해 대본과 더불어 영화 정보에 대한 크롤링도 진행했습니다. 전처리 파이프라인의 경우 대본의 양식을 유형화하여 진행했으며, 각 유형별 대사를 가장 많이 남기는 경우를 해당 대본의 전처리 결과로 사용했습니다. 그 결과, 전체 크롤링한 대본 데이터 중, 텍스트 데이터로 처리가능하며, 장르가 검색이 되었고, 장르 중 액션과 범죄 장르를 선택하게 되었습니다. 이 때 대사의 개수는 1255개입니다. 
+
+## Implemtation-Fine tuning
+
+![overview-4](overview-4.PNG)
+
+모델 학습을 위해 transformers의 Trainer API([링크](https://huggingface.co/docs/transformers/main_classes/trainer)를 사용했으며, 그 결과 위와 같은 학습을 진행함과 동시에 checkout point를 저장하며 진행했습니다.
+
+
 
 # Requirements
 

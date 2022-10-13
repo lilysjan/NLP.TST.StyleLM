@@ -31,7 +31,7 @@ fine-tuning을 위해 직접 크롤링한 한국어 대본 데이터를 사용�
 
 ![overview-4](overview-4.PNG)
 
-모델 학습을 위해 transformers의 Trainer API([링크](https://huggingface.co/docs/transformers/main_classes/trainer)를 사용했으며, 그 결과 위와 같은 학습을 진행함과 동시에 checkout point를 저장하며 진행했습니다.
+모델 학습을 위해 transformers의 Trainer API([링크](https://huggingface.co/docs/transformers/main_classes/trainer))를 사용했으며, 그 결과 위와 같은 학습을 진행함과 동시에 checkout point를 저장하며 진행했습니다.
 
 
 

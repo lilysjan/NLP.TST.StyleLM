@@ -11,17 +11,17 @@ StyleLM 을 이용한 시나리오 작성
 # Overview
 
 ## Motivation
-![overview-1](overview-1.PNG)
+![overview-1](assets/overview-1.PNG)
 
 흔히 영화관에서 배우들은 대본을 보고 대사를 진행하지만, 대본을 작성할 때에 주로 문어체로 전달이 되기 때문에 억양이나 작 중 성격과 같은 비언어, 반언어적 요소는 배우에 의존하게 된다. 이는 대본을 "작성"하는 과정에서 구어체로 작성하는 것이 전체 시나리오를 완성하고 준비하는 과정에서 우선순위에 밀리기도 하며 필요한 시간이 소모적이란 점이다. 
 
 ## Modelling
-![overview-2](overview-2.PNG)
+![overview-2](assets/overview-2.PNG)
 
 다만 영화의 장르적 특성으로 인해 등장인물들의 구사하는 표현들이나 뉘앙스에도 반복되는 패턴이 있게 된다. 이 반복되는 패턴에 주목하여, 입력문장의 내용은 보존하지만, 장르의 스타일을 반영된 대사로 바꿔주는 Text Style Transfer(TST)를 수행하는 모델을 구현해봤습니다.
 
 ## Implementation-Data
-![overview-3](overview-3.PNG)
+![overview-3](assets/overview-3.PNG)
 
 TST를 수행하는 모델로 Style LM([참고문헌](https://ojs.aaai.org/index.php/AAAI/article/view/6433))을 구현하기 위해  HuggingFace에서 제공하는 pre-trained KoBERT 모델과 Encoder-Decoder 모델을 사용했습니다. 이 때 사용한 configuration"klue/bert-base"([Ref.](https://huggingface.co/klue/bert-base))을 사용했습니다.
 
@@ -29,7 +29,7 @@ fine-tuning을 위해 직접 크롤링한 한국어 대본 데이터를 사용�
 
 ## Implemtation-Fine tuning
 
-![overview-4](overview-4.PNG)
+![overview-4](assets/overview-4.PNG)
 
 모델 학습을 위해 transformers의 Trainer API([링크](https://huggingface.co/docs/transformers/main_classes/trainer))를 사용했으며, 그 결과 위와 같은 학습을 진행함과 동시에 checkout point를 저장하며 진행했습니다.
 
@@ -62,7 +62,7 @@ fine-tuning을 위해 직접 크롤링한 한국어 대본 데이터를 사용�
 
 # Sample
 
-![사진](result.PNG)
+![사진](assets/result.PNG)
 모델 성능 평가 코드를 실행하면 최종 결과를 받을 수 있습니다.
 다만, 해당 결과를 돌려보기 위해서 모델 파라미터가 필요하기에 필요 하신 분들은 따로 연락을 주시길 바랍니다!
 

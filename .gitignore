@@ -1,7 +1,7 @@
 .idea
 
-db/raw
-db/train
-db/val
+data/raw
+data/processed
+data/txt
 
 *.pyc

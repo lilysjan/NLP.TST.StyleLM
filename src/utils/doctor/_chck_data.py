@@ -3,11 +3,11 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
-from src.utils.log._format import section_decorator
+from src.utils.log._format import section_decorator, get_today
 
 
 @section_decorator
-def _get_raw_list():
+def _get_raw_list(*args, **kwargs):
     print("Raw file Stats")
     print("- Extension")
     flist = os.listdir('data/raw/')
@@ -18,7 +18,7 @@ def _get_raw_list():
 
 
 @section_decorator
-def _get_txt_list():
+def _get_txt_list(*args, **kwargs):
     print("Txt file Stats")
     flist = os.listdir('data/txt/')
     exts = list(map(lambda x: ''.join(x.split('.')[:-1]), flist))
@@ -26,7 +26,7 @@ def _get_txt_list():
 
 
 @section_decorator
-def _export_summary():
+def _export_summary(*args, **kwargs):
     print("Current DB Stats")
     print("See more details at exported files")
     txt_list = os.listdir('data/txt/')
@@ -38,8 +38,9 @@ def _export_summary():
     raws = pd.DataFrame(['Y']*len(raws), index=raws, columns=['Raw'])
 
     tab = raws.join(txts, how='outer')
+    tab['encoding'] = ['utf-8'] * len(tab)
 
-    tab.to_csv('data/meta.csv', encoding='utf-8')
+    tab.to_csv(f'data/meta_{get_today()}.csv', encoding='utf-8')
     tab_pr = tabulate(tab, headers='keys', tablefmt='psql', showindex=True)
     print('# of txt: ', len(tab)-tab['Txt'].isna().sum())
     print('# of all:', len(tab))

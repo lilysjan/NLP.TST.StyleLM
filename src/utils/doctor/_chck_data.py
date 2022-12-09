@@ -1,7 +1,9 @@
 import os
+import pickle
 import numpy as np
 import pandas as pd
 from tabulate import tabulate
+
 
 from src.utils.log._format import section_decorator, get_today
 
@@ -31,13 +33,20 @@ def _export_summary(*args, **kwargs):
     print("See more details at exported files")
     txt_list = os.listdir('data/txt/')
     txts = list(map(lambda x: ''.join(x.split('.')[:-1]), txt_list))
-    txts = pd.DataFrame(['Y']*len(txts), index=txts, columns=['Txt'])
+    # txts = pd.DataFrame(['Y']*len(txts), index=txts, columns=['Txt'])
 
-    raw_list = os.listdir('data/raw/')
-    raws = list(map(lambda x: ''.join(x.split('.')[:-1]), raw_list))
-    raws = pd.DataFrame(['Y']*len(raws), index=raws, columns=['Raw'])
+    flist = os.listdir('data/raw/')
+    # fname = list(map(lambda x: ''.join(x.split('.')[:-1]), flist))
+    # raws = list(map(lambda x: ''.join(x.split('.')[:-1]), raw_list))
+    # raws = pd.DataFrame(['Y']*len(raws), index=raws, columns=['Raw'])
 
-    tab = raws.join(txts, how='outer')
+    tab = pd.read_csv('data/processed/movie_df.csv', encoding='utf-8', index_col=0)
+
+    # tab = raws.join(txts, how='outer')
+    tab.loc[tab['원본파일명'].isin(flist), 'Raw'] = 'Y'
+    tab.loc[tab['원본파일명'].apply(lambda x: ''.join(x.split('.')[:-1])).isin(txts), 'Txt'] = 'Y'
+    tab['Raw'].fillna('N', inplace=True)
+    tab['Txt'].fillna('N', inplace=True)
     tab['encoding'] = ['utf-8'] * len(tab)
 
     tab.to_csv(f'data/meta_{get_today()}.csv', encoding='utf-8')

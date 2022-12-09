@@ -32,26 +32,29 @@ def _export_summary(*args, **kwargs):
     print("Current DB Stats")
     print("See more details at exported files")
     txt_list = os.listdir('data/txt/')
-    txts = list(map(lambda x: ''.join(x.split('.')[:-1]), txt_list))
-    # txts = pd.DataFrame(['Y']*len(txts), index=txts, columns=['Txt'])
+    txt_names = list(map(lambda x: ''.join(x.split('.')[:-1]), txt_list))
+    txts = pd.DataFrame(['Y']*len(txt_names), index=txt_names, columns=['TXT'])
 
-    flist = os.listdir('data/raw/')
-    # fname = list(map(lambda x: ''.join(x.split('.')[:-1]), flist))
-    # raws = list(map(lambda x: ''.join(x.split('.')[:-1]), raw_list))
-    # raws = pd.DataFrame(['Y']*len(raws), index=raws, columns=['Raw'])
+    raw_list = os.listdir('data/raw/')
+    raw_names = list(map(lambda x: ''.join(x.split('.')[:-1]), raw_list))
+    raws = pd.DataFrame(['Y']*len(raw_names), index=raw_names, columns=['RAW'])
+
+    file_status = raws.join(txts, how='outer')
+    file_status.fillna('N', inplace=True)
+    file_status.index.name = '원본파일명'
+    file_status.reset_index(inplace=True)
 
     tab = pd.read_csv('data/processed/movie_df.csv', encoding='utf-8', index_col=0)
+    tab['Extension'] = tab['원본파일명'].apply(lambda x: ''.join(x.split('.')[-1]))
+    tab['원본파일명'] = tab['원본파일명'].apply(lambda x: ''.join(x.split('.')[:-1]))
 
-    # tab = raws.join(txts, how='outer')
-    tab.loc[tab['원본파일명'].isin(flist), 'Raw'] = 'Y'
-    tab.loc[tab['원본파일명'].apply(lambda x: ''.join(x.split('.')[:-1])).isin(txts), 'Txt'] = 'Y'
-    tab['Raw'].fillna('N', inplace=True)
-    tab['Txt'].fillna('N', inplace=True)
+    tab = tab.join(file_status.set_index('원본파일명'), on='원본파일명', how='outer')
+    tab.reset_index(inplace=True, drop=True)
     tab['encoding'] = ['utf-8'] * len(tab)
 
     tab.to_csv(f'data/meta_{get_today()}.csv', encoding='utf-8')
     tab_pr = tabulate(tab, headers='keys', tablefmt='psql', showindex=True)
-    print('# of txt: ', len(tab)-tab['Txt'].isna().sum())
+    print('# of txt: ', len(tab)-tab['TXT'].isna().sum())
     print('# of all:', len(tab))
     # print(tab_pr)
 

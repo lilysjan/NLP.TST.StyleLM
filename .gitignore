@@ -1,7 +1,3 @@
 .idea
-
-data/raw
-data/processed
-data/txt
-
 *.pyc
+data

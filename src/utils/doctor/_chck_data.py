@@ -1,3 +1,4 @@
+import re
 import os
 import pickle
 import numpy as np
@@ -50,13 +51,34 @@ def _export_summary(*args, **kwargs):
 
     tab = tab.join(file_status.set_index('원본파일명'), on='원본파일명', how='outer')
     tab.reset_index(inplace=True, drop=True)
+    tab.drop_duplicates(inplace=True)
     tab['encoding'] = ['utf-8'] * len(tab)
+
+    tab['배역'].fillna(',', inplace=True)
+    tab['배역'] = tab['배역'].str.replace('\n', ',')
+    tab['배역'] = tab['배역'].str.replace('\t', ',')
+    tab['배역'] = tab['배역'].str.replace('\\r', ',')
+    tab['배역'] = tab['배역'].apply(_extract_characters)
+    tab['배역'] = tab['배역'].apply(lambda x: x.split(',')).apply(lambda x: [i for i in x if len(i) != 0])
+    tab['배역'] = tab['배역'].apply(lambda x: '#'.join(x))
 
     tab.to_csv(f'data/meta_{get_today()}.csv', encoding='utf-8')
     tab_pr = tabulate(tab, headers='keys', tablefmt='psql', showindex=True)
     print('# of txt: ', len(tab)-tab['TXT'].isna().sum())
     print('# of all:', len(tab))
     # print(tab_pr)
+
+
+def _extract_characters(dat: str):
+    if '관람가' in dat:
+        return ''
+    if '(' in dat:
+        dat = dat.replace('(', ',')
+    if ')' in dat:
+        dat = dat.replace(')', ',')
+    if ',' not in dat:
+        dat = dat.replace(' ', ',')
+    return dat
 
 
 def run():

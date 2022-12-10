@@ -88,7 +88,7 @@ def _get_prep_quality_ratio(data):
         print(f"{k} : {v}/{len(data)}")
 
 
-def get_genre_movies(movies, ver=None):
+def get_genre_scripts(movies, ver=None):
     ver = get_today() if ver is None else ver
     meta = _get_meta(ver)
     meta['장르'] = meta['장르'].fillna('미상')
@@ -102,7 +102,7 @@ def get_genre_movies(movies, ver=None):
 
 
 def _get_genre_len(data):
-    gen = get_genre_movies(data)
+    gen = get_genre_scripts(data)
 
     for k, v in gen.items():
         print(k, len(v))

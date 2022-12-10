@@ -1,5 +1,12 @@
 import re
 from src.utils.data import data_process as dp
+from src.utils.token.tk import TokenHandler
+
+import config
+
+
+def load_tk(alg, flist):
+    return TokenHandler(alg, flist)
 
 
 def save_strings(dat: dict):
@@ -12,8 +19,14 @@ def save_strings(dat: dict):
 def main():
     movies = dp.get_txt()
     scripts_gen = dp.get_genre_scripts(movies)
+
     save_strings(scripts_gen)
+
+    tk = load_tk(config.algorithm, config.train_genre)
+
+    tk.train_tokenizer()
     dp.sensor_dat(movies)
+
     print()
 
 

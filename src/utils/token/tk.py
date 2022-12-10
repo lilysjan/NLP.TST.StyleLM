@@ -19,9 +19,10 @@ from config import spl_tokens, unk_token
 class TokenHandler(object):
     def __init__(self, alg, flist, pret='default'):
         self.tokenizer, self.trainer = prepare_tokenizer_trainer(alg)
-        self.flist = flist
-        self._make_inp()
-        self.raw = 'data/processed/tk_input/tmp.txt'
+        # self.flist = flist
+        # _make_inp(self.flist)
+        # self.raw = 'data/processed/tk_input/tmp.txt'
+        self.raw = [f"data/processed/tk_input/{i}.txt" for i in flist]
         # Step 1 : Normalization
 
         # Step 2 : Pre-tokenization
@@ -36,20 +37,21 @@ class TokenHandler(object):
     def train_tokenizer(self):
         self.tokenizer.train(self.raw, self.trainer)
 
-    def _make_inp(self):
-        tmp = ''
-        for fname in self.flist:
-            with open(f'data/processed/tk_input/{fname}.txt', 'a', encoding='utf-8') as f:
-                dat = f.readlines()
-            if type(dat) == str:
-                tmp += dat
-            elif type(dat) == list:
-                tmp += ''.join(dat)
-            else:
-                assert False
 
-        with open(f'data/processed/tk_input/tmp.txt', 'a', encoding='utf-8') as f:
-            f.write(tmp)
+def _make_inp(flist):
+    tmp = ''
+    for fname in flist:
+        with open(f'data/processed/tk_input/{fname}.txt', 'r', encoding='utf-8') as f:
+            dat = f.readlines()
+        if type(dat) == str:
+            tmp += dat
+        elif type(dat) == list:
+            tmp += ''.join(dat)
+        else:
+            assert False
+
+    with open(f'data/processed/tk_input/tmp.txt', 'a', encoding='utf-8') as f:
+        f.write(tmp)
 
 
 def prepare_tokenizer_trainer(alg):
@@ -69,5 +71,3 @@ def prepare_tokenizer_trainer(alg):
         tokenizer = Tokenizer(WordLevel(unk_token=unk_token))
         trainer = WordLevelTrainer(special_tokens=spl_tokens)
     return tokenizer, trainer
-
-
